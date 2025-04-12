@@ -1,8 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
 using namespace std;
+
 class Attendee {
+
 public:
     string name;
     string contact;
@@ -10,11 +13,17 @@ public:
     bool hasGuest;
     string guestName;
     bool needsSecurity;
+
 public:
-    Attendee(string name, string contact, bool rsvp,
-             bool hasGuest = false, string guestName = "", bool needsSecurity = false)
-        : name(name), contact(contact), rsvp(rsvp), hasGuest(hasGuest),
-          guestName(guestName), needsSecurity(needsSecurity) {}
+    Attendee(string name, string contact, bool rsvp,bool hasGuest = false, string guestName = "", bool needsSecurity = false) {
+        this->name = name;
+        this->contact = contact;
+        this->rsvp = rsvp;
+        this->hasGuest = hasGuest;
+        this->guestName = guestName;
+        this->needsSecurity = needsSecurity;
+    }
+    
     void display() {
         cout << "\nAttendee Details:\n";
         cout << "Name: " << name << endl;
