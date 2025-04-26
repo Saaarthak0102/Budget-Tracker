@@ -228,15 +228,30 @@ class Event {
         Attendee* attendees;       // Aggregation with Attendee (array)
         int attendeeCount;         // Number of attendees
         int maxAttendees;          // Maximum capacity for attendees
+
         Budget* budget;            // Composition with Budget
+        int venueCost;          // Cost of the venue
+        int serviceCost;        // Cost of services
+
         Venue* venue;              // Association with Venue
     
         // Constructor
-        Event(string name, string hostname, string hostcontact, string location, string date, string time, string type, Venue* venue, int maxAttendees)
-            : name(name), hostname(hostname), hostcontact(hostcontact), location(location), date(date), time(time), type(type), venue(venue), maxAttendees(maxAttendees) {
+        Event(string name, string hostname, string hostcontact, string location, string date, string time, string type, int maxAttendees, int venueCost, int serviceCost)
+            : name(name), hostname(hostname), hostcontact(hostcontact), location(location), date(date), time(time), type(type), maxAttendees(maxAttendees) {
             attendees = new Attendee[maxAttendees]; // Dynamically allocate array for attendees
             attendeeCount = 0;                      // Initialize attendee count
-            budget = nullptr;                       // Initialize budget as null
+            budget = new Budget(venueCost, serviceCost); // Initialize budget
+            venue = nullptr; // Initialize venue pointer
+
+            // Write event details to event.csv
+            ofstream file("event.csv", ios::app); // Open file in append mode
+            if (file.is_open()) {
+                file << name << "," << hostname << "," << hostcontact << "," << location << "," 
+                    << date << "," << time << "," << type << endl;
+                file.close();
+            } else {
+                cerr << "Error: Could not open event.csv for writing." << endl;
+            }
         }
     
         // Add an attendee to the event
@@ -306,44 +321,121 @@ void login(){
 
     if (username == "admin" && password == "admin") {
         cout << "Login successful!" << endl;
-        menu();
+        main_menu();
     } else {
         cout << "Invalid credentials. Please try again." << endl;
         login();
     }
 }
 
-void menu(){
-    cout << "1. Create Event" << endl;
-    cout << "2. View Events" << endl;
-    cout << "3. Add Attendee" << endl;
-    cout << "4. Add Service" << endl;
-    cout << "5. Add Venue" << endl;
-    cout << "6. Exit" << endl;
+void main_menu(){
+    cout << "\nMain menu\n";
+    cout << "1. Manage Event\n";
+    cout << "2. Exit\n";
     int choice;
     cin >> choice;
 
     switch (choice) {
         case 1:
-            // Create Event
+            cout << "1. New Event\n";
+            cout << "2. Existing Event\n";
+            int subChoice;
+            cin >> subChoice;
+            if (subChoice == 1) {
+                newEvent();
+            } else if (subChoice == 2) {
+                existingEvent();
+            } else {
+                cout << "Invalid choice. Returning to main main_menu.\n";
+                main_menu();
+            }
             break;
         case 2:
-            // View Events
-            break;
-        case 3:
-            // Add Attendee
-            break;
-        case 4:
-            // Add Service
-            break;
-        case 5:
-            // Add Venue
-            break;
-        case 6:
+            cout << "Exiting the program. Goodbye!\n";
             exit(0);
         default:
-            cout << "Invalid choice. Please try again." << endl;
-            menu();
+            cout << "Invalid choice. Please try again.\n";
+            main_menu();
     }
 }
+
+// New customer workflow
+void newEvent() {
+    cout << "Enter Customer Details:\n";
+    // Code to enter customer details
+    enterEventDetails();
+}
+
+// Existing customer workflow
+void existingEvent() {
+    cout << "1. Display Event Booking\n";
+    cout << "2. Update Existing Booking\n";
+    int choice;
+    cin >> choice;
+
+    if (choice == 1) {
+        enterEventDetails();
+    } else if (choice == 2) {
+        updateBooking();
+    } else {
+        cout << "Invalid choice. Returning to main main_menu.\n";
+        main_menu();
+    }
+}
+
+// Enter event details
+void enterEventDetails() {
+    cout << "Enter Event Details:\n";
+    string name, hostname, hostcontact, location, date, time, type;
+    cout << "Event Name: ";
+    cin >> name;
+    cout << "Host Name: ";
+    cin >> hostname;
+    cout << "Host Contact: ";
+    cin >> hostcontact;
+    cout << "Location: ";
+    cin >> location;
+    cout << "Date (YYYY-MM-DD): ";
+    cin >> date;
+    cout << "Time (HH:MM): ";
+    cin >> time;
+    cout << "Type of Event: ";
+    cin >> type;
+   
+    //Budget details
+    int venueCost, serviceCost;
+    cout << "Venue Cost: ";
+    cin >> venueCost;
+    cout << "Service Cost: ";
+    cin >> serviceCost;
+
+   Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
+    
+}
+
+
+
+// Choose venue and services
+void chooseVenueAndServices() {
+    cout << "Choose from the budget-friendly choices for venue and services.\n";
+    cout << "Or enter custom details if your desired choices are not listed.\n";
+    // Code to choose venue and services
+    maintainAttendeeList();
+}
+
+// Maintain attendee list
+void maintainAttendeeList() {
+    cout << "Maintaining Attendee List:\n";
+    // Code to maintain attendee list
+    cout << "Event successfully created!\n";
+    main_menu();
+}
+
+// Update existing booking
+void updateBooking() {
+    cout << "Updating Existing Booking:\n";
+    // Code to update existing booking
+    main_menu();
+}
+
 
