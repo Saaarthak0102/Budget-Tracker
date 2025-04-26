@@ -56,6 +56,7 @@ public:
     int venueCost;
     int serviceCost;
     int totalCost;
+    Services* services; 
 
     Budget(int venueCost, int serviceCost) {
         this->venueCost = venueCost;
@@ -230,8 +231,6 @@ class Event {
         int maxAttendees;          // Maximum capacity for attendees
 
         Budget* budget;            // Composition with Budget
-        int venueCost;          // Cost of the venue
-        int serviceCost;        // Cost of services
 
         Venue* venue;              // Association with Venue
     
