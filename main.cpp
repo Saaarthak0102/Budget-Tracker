@@ -381,29 +381,36 @@ void login() {
 
 
 
+// Function to display the main menu and handle user input
 void main_menu(){
-    cout << "\nMain menu\n";
-    cout << "1. Manage Events\n";
-    cout << "2. Exit\n";
+    cout << "Welcome to the Event Planner and Budget Tracker System!\n";
+    cout << "Project By:\n";
+    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
+    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
+    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
+    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
+
+    //press ENTER key to continue
+    cout << "Press ENTER key to continue...\n";
+    cin.ignore();
+    cin.get();
+
+
+    cout << "1. New Event\n";
+    cout << "2. Existing Event\n";
+    cout << "3. Exit\n";
+
+    cout << "Please select an option: ";
     int choice;
     cin >> choice;
-
-    switch (choice) {
+    switch(choice) {
         case 1:
-            cout << "1. New Event\n";
-            cout << "2. Existing Event\n";
-            int subChoice;
-            cin >> subChoice;
-            if (subChoice == 1) {
-                newEvent();
-            } else if (subChoice == 2) {
-                existingEvent();
-            } else {
-                cout << "Invalid choice. Returning to main main_menu.\n";
-                main_menu();
-            }
+            newEvent();
             break;
         case 2:
+            existingEvent();
+            break;
+        case 3:
             cout << "Exiting the program. Goodbye!\n";
             exit(0);
         default:
