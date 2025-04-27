@@ -240,6 +240,7 @@ class Event {
         string date;
         string time;
         string type;
+        static int serialNo;        // Static variable to keep track of event serial number
     
         Attendee* attendees;       // Aggregation with Attendee (array)
         int attendeeCount;         // Number of attendees
@@ -256,15 +257,24 @@ class Event {
             attendeeCount = 0;                      // Initialize attendee count
             budget = new Budget(venueCost, serviceCost); // Initialize budget
             venue = nullptr; // Initialize venue pointer
+            serialNo++; // Increment event serial number
 
             // Write event details to event.csv
             ofstream file("event.csv", ios::app); // Open file in append mode
             if (file.is_open()) {
-                file << name << "," << hostname << "," << hostcontact << "," << location << "," 
-                    << date << "," << time << "," << type << endl;
+                // Check if the file is empty
+                file.seekp(0, ios::end);
+                if (file.tellp() == 0) {
+                    // Write the header if the file is empty
+                    file << "SerialNo,EventName,HostName,HostContact,EventLocation,EventDate,EventTime,EventType,EventBudget\n";
+                }
+            
+                // Write the event data
+                file << serialNo << "," << name << "," << hostname << "," << hostcontact << "," << location << "," 
+                     << date << "," << time << "," << type << "," << budget->totalCost << endl;
                 file.close();
             } else {
-                cerr << "Error: Could not open event.csv for writing." << endl;
+                cout << "Error: Could not open event.csv for writing." << endl;
             }
         }
     
@@ -343,9 +353,11 @@ class Event {
 int Attendee::serialNo = 0;
 int Services::serialNo = 0;
 int Venue::serialNo = 0;
+int Event::serialNo = 0;
 
 // Function prototypes
 void login();
+void welcome();
 void addAttendeeList(Event &event,string filename);
 void addAttendee(Event &event);
 void main_menu();
@@ -354,6 +366,7 @@ void existingEvent();
 void enterEventDetails();
 // void chooseVenueAndServices(Event &event);
 void maintainAttendeeList(Event &event);
+void displayEventDetails();
 
 void login() {
     cout<<"Login\n";
@@ -375,7 +388,7 @@ void login() {
             cin.get();
 
             // Call the main menu function
-            main_menu();
+            welcome();
             return;
         } else {
             attempts++;
@@ -391,7 +404,7 @@ void login() {
 
 
 // Function to display the main menu and handle user input
-void main_menu(){
+void welcome(){
     cout << "Welcome to the Event Planner and Budget Tracker System!\n";
     cout << "Project By:\n";
     cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
@@ -401,10 +414,14 @@ void main_menu(){
 
     //press ENTER key to continue
     cout << "Press ENTER key to continue...\n";
-    cin.ignore();
+    cin.sync();
     cin.get();
+    main_menu();
 
+}
 
+void main_menu() {
+    cout << "Main Menu:\n";
     cout << "1. New Event\n";
     cout << "2. Existing Event\n";
     cout << "3. Exit\n";
@@ -430,7 +447,7 @@ void main_menu(){
 
 // New customer workflow
 void newEvent() {
-    cout << "Adding New Event\n";
+    cout << "Option Selected: Adding New Event\n";
     //press ENTER key to continue
     cout << "Press ENTER key to continue...\n";
     cin.ignore();
@@ -444,18 +461,25 @@ void enterEventDetails() {
     string name, hostname, hostcontact, location, date, time, type;
     cout << "Event Name: ";
     cin >> name;
+    cin.ignore(); // Fix newline buffer
     cout << "Host Name: ";
     cin >> hostname;
+    cin.ignore(); // Fix newline buffer
     cout << "Host Contact: ";
     cin >> hostcontact;
+    cin.ignore(); // Fix newline buffer
     cout << "Location: ";
     cin >> location;
+    cin.ignore(); // Fix newline buffer
     cout << "Date (YYYY-MM-DD): ";
     cin >> date;
+    cin.ignore(); // Fix newline buffer
     cout << "Time (HH:MM): ";
     cin >> time;
+    cin.ignore(); // Fix newline buffer
     cout << "Type of Event: ";
     cin >> type;
+    cin.ignore(); // Fix newline buffer
 
    
     //Budget details
@@ -469,7 +493,7 @@ void enterEventDetails() {
    Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
    cout << "Event & Budget details saved successfully!\n";
 
-       // Create attendee file
+    // Create attendee file
     string filename = name.substr(0, 2) + hostname.substr(0, 2) + "_attendee.csv";
     ofstream attendeeFile(filename);
     if (attendeeFile.is_open()) {
@@ -524,6 +548,7 @@ void addAttendeeList(Event &event, string filename) {
     cout << "Press ENTER key to continue...\n";
     cin.ignore();
     cin.get();
+    main_menu();
 }
 
 // Choose venue and services
@@ -537,20 +562,107 @@ void addAttendeeList(Event &event, string filename) {
 
 // Existing customer workflow
 void existingEvent() {
+    cout << "Option Selected: Existing Event\n";
     cout << "1. Display Event Booking\n";
     cout << "2. Update Existing Booking\n";
+    cout << "3. Return to Main Menu\n";
+    cout << "Please select an option: ";
     int choice;
     cin >> choice;
 
-    if (choice == 1) {
-        enterEventDetails();
-    } else if (choice == 2) {
-        // updateBooking();
-    } else {
-        cout << "Invalid choice. Returning to main main_menu.\n";
-        main_menu();
+    switch(choice) {
+        case 1:
+            displayEventDetails();
+            break;
+        case 2:
+            cout << "Updating Existing Booking:\n";
+            // Code to update existing booking
+            break;
+        case 3:
+            main_menu();
+            break;
+        default:
+            cout << "Invalid choice. Please try again.\n";
+            existingEvent();
     }
 }
+
+// Display event booking details
+void displayEventDetails(){
+    cout << "Displaying Event Booking:\n";
+        // Code to display event booking
+        ifstream file("event.csv");
+        if (file.is_open()) {
+            string line;
+            while (getline(file, line)) {
+                cout << line << endl;
+            }
+            file.close();
+        } else {
+            cout << "Error: Could not open event.csv" << endl;
+        }
+        cout<< "Enter Event Serial No to view details: ";
+        int serialNo;
+        cin >> serialNo;
+        //search for event in event.csv
+        ifstream eventFile("event.csv");
+        if (eventFile.is_open()) {
+            string line;
+            bool isHeader = true; // Flag to skip the header row
+            while (getline(eventFile, line)) {
+                if (isHeader) {
+                    isHeader = false; // Skip the first line (header)
+                    continue;
+                }
+        
+                stringstream ss(line);
+                string temp;
+                int currentSerialNo;
+                getline(ss, temp, ',');
+        
+                // Validate and parse the serial number
+                try {
+                    currentSerialNo = stoi(temp);
+                } catch (const invalid_argument& e) {
+                    cerr << "Error: Invalid serial number format in the file." << endl;
+                    continue; // Skip this line and move to the next
+                }
+        
+                if (currentSerialNo == serialNo) {
+                    cout << "Event Details:\n" << line << endl;
+        
+                    // Extract the first two characters after the first comma and the second comma
+                    size_t firstComma = line.find(','); // Find the position of the first comma
+                    size_t secondComma = line.find(',', firstComma + 1); // Find the position of the second comma
+
+                    // Check if both commas were found
+                if (firstComma != string::npos && secondComma != string::npos) {
+                    string part1 = line.substr(firstComma + 1, 2); // Extract 2 characters after the first comma
+                    string part2 = line.substr(secondComma + 1, 2); // Extract 2 characters after the second comma
+                    string filename = part1 + part2 + "_attendee.csv";
+
+                   // Display attendees from attendee file
+                    ifstream attendeeFile(filename);
+                    if (attendeeFile.is_open()) {
+                        string attendeeLine;
+                        cout << "Attendee List:\n";
+                        while (getline(attendeeFile, attendeeLine)) {
+                            cout << attendeeLine << endl;
+                        }
+                        attendeeFile.close();
+                    }
+                 } else {
+                    cout << "Error: Could not open attendee file." << endl;
+                }
+                break;
+                }
+            }
+            eventFile.close();
+        } else {
+            cout << "Error: Could not open event.csv" << endl;
+        }
+}
+
 // Maintain attendee list for existing event
 void maintainAttendeeList(Event &event) {
     cout << "Maintaining Attendee List:\n";
