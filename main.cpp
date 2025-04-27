@@ -6,7 +6,14 @@
 
 using namespace std;
 
+// class declarations
+class Attendee;
+class Services;
+class Venue;
+class Budget;
+class Event;
 
+// class definitions
 
 class Attendee {
 // aggregation with event class
@@ -337,6 +344,10 @@ int Attendee::serialNo = 0;
 int Services::serialNo = 0;
 int Venue::serialNo = 0;
 
+// Function prototypes
+void login();
+void addAttendeeList(Event &event,string filename);
+void addAttendee(Event &event);
 void main_menu();
 void newEvent();
 void existingEvent();
@@ -344,27 +355,35 @@ void enterEventDetails();
 // void chooseVenueAndServices(Event &event);
 void maintainAttendeeList(Event &event);
 
-void login(){
+void login() {
     string username, password;
-    cout << "Enter username: ";
-    cin >> username;
-    cout << "Enter password: ";
-    cin >> password;
+    int attempts = 0;
 
-    if (username == "admin" && password == "admin") {
-        cout << "Login successful!" << endl;
-        main_menu();
-    } else {
-        cout << "Invalid credentials. Please try again." << endl;
-        login();
+    while (attempts < 3) {
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter password: ";
+        cin >> password;
+
+        if (username == "admin" && password == "admin") {
+            cout << "Login successful!" << endl;
+            main_menu();
+            return;
+        } else {
+            attempts++;
+            cout << "Invalid credentials. Attempts remaining: " << (3 - attempts) << endl;
+        }
     }
+
+    cout << "Too mENTER failed attempts. Exiting program." << endl;
+    exit(0);
 }
 
 
 
 void main_menu(){
     cout << "\nMain menu\n";
-    cout << "1. Manage Event\n";
+    cout << "1. Manage Events\n";
     cout << "2. Exit\n";
     int choice;
     cin >> choice;
@@ -396,28 +415,11 @@ void main_menu(){
 // New customer workflow
 void newEvent() {
     cout << "Adding New Event\n";
-    //press any key to continue
-    cout << "Press any key to continue...\n";
+    //press ENTER key to continue
+    cout << "Press ENTER key to continue...\n";
     cin.ignore();
     cin.get();
     enterEventDetails();
-}
-
-// Existing customer workflow
-void existingEvent() {
-    cout << "1. Display Event Booking\n";
-    cout << "2. Update Existing Booking\n";
-    int choice;
-    cin >> choice;
-
-    if (choice == 1) {
-        enterEventDetails();
-    } else if (choice == 2) {
-        // updateBooking();
-    } else {
-        cout << "Invalid choice. Returning to main main_menu.\n";
-        main_menu();
-    }
 }
 
 // Enter event details
@@ -451,17 +453,62 @@ void enterEventDetails() {
    Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
    cout << "Event & Budget details saved successfully!\n";
 
-   //press any key to continue
-    cout << "Press any key to continue...\n";
+       // Create attendee file
+    string filename = name.substr(0, 2) + hostname.substr(0, 2) + "_attendee.csv";
+    ofstream attendeeFile(filename);
+    if (attendeeFile.is_open()) {
+        attendeeFile << "SerialNo,Name,Contact,RSVP,HasGuest,GuestName,NeedsSecurity\n";
+        attendeeFile.close();
+        cout << "Attendee file created: " << filename << endl;
+    } else {
+        cout << "Error: Could not create attendee file." << endl;
+    }
+
+   //press ENTER key to continue
+    cout << "Press ENTER key to continue...\n";
     cin.ignore();
     cin.get();
 
     // Choose venue and services
     // chooseVenueAndServices(event);
-    maintainAttendeeList(event);
+    addAttendeeList(event,filename);
 }
 
+void addAttendeeList(Event &event, string filename) {
+    cout << "How many attendees do you want to add? ";
+    int numAttendees;
+    cin >> numAttendees;
 
+    for (int i = 0; i < numAttendees; i++) {
+        if (event.attendeeCount >= event.maxAttendees) {
+            cout << "Cannot add more attendees. Maximum capacity reached." << endl;
+            break;
+        }
+
+        cout << "Adding Attendee " << (i + 1) << ":\n";
+        event.addAttendee(); // Call the addAttendee method of the Event class
+
+        // Append attendee details to the file
+        ofstream attendeeFile(filename, ios::app); // Open file in append mode
+        if (attendeeFile.is_open()) {
+            attendeeFile << Attendee::serialNo << "," << event.attendees[event.attendeeCount - 1].name << ","
+                         << event.attendees[event.attendeeCount - 1].contact << ","
+                         << event.attendees[event.attendeeCount - 1].rsvp << ","
+                         << event.attendees[event.attendeeCount - 1].hasGuest << ","
+                         << event.attendees[event.attendeeCount - 1].guestName << ","
+                         << event.attendees[event.attendeeCount - 1].needsSecurity << endl;
+            attendeeFile.close();
+            cout << "Attendee details saved to file: " << filename << endl;
+        } else {
+            cout << "Error: Could not open attendee file for writing." << endl;
+        }
+    }
+
+    cout << "Attendee list updated successfully!\n";
+    cout << "Press ENTER key to continue...\n";
+    cin.ignore();
+    cin.get();
+}
 
 // Choose venue and services
 // void chooseVenueAndServices(Event &event) {
@@ -471,7 +518,24 @@ void enterEventDetails() {
 //     maintainAttendeeList(event);
 // }
 
-// Maintain attendee list
+
+// Existing customer workflow
+void existingEvent() {
+    cout << "1. Display Event Booking\n";
+    cout << "2. Update Existing Booking\n";
+    int choice;
+    cin >> choice;
+
+    if (choice == 1) {
+        enterEventDetails();
+    } else if (choice == 2) {
+        // updateBooking();
+    } else {
+        cout << "Invalid choice. Returning to main main_menu.\n";
+        main_menu();
+    }
+}
+// Maintain attendee list for existing event
 void maintainAttendeeList(Event &event) {
     cout << "Maintaining Attendee List:\n";
     cout << "1. Add Attendee\n";
