@@ -356,6 +356,7 @@ void enterEventDetails();
 void maintainAttendeeList(Event &event);
 
 void login() {
+    cout<<"Login\n";
     string username, password;
     int attempts = 0;
 
@@ -367,6 +368,13 @@ void login() {
 
         if (username == "admin" && password == "admin") {
             cout << "Login successful!" << endl;
+
+            //press ENTER key to continue
+            cout << "Press ENTER key to continue...\n";
+            cin.ignore();
+            cin.get();
+
+            // Call the main menu function
             main_menu();
             return;
         } else {
@@ -375,7 +383,8 @@ void login() {
         }
     }
 
-    cout << "Too mENTER failed attempts. Exiting program." << endl;
+    cout << "Too many failed attempts."<< endl;
+    cout << "Exiting the program."<<endl;
     exit(0);
 }
 
@@ -575,9 +584,9 @@ void maintainAttendeeList(Event &event) {
     main_menu();
 }
 
+// Main function
 
 int main() {
-    cout << "Welcome to the Event Management System!\n";
     login();
     return 0;
 }
