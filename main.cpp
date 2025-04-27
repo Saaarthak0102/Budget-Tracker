@@ -360,8 +360,7 @@ void main_menu(){
 
 // New customer workflow
 void newEvent() {
-    cout << "Enter Customer Details:\n";
-    // Code to enter customer details
+    cout << "New Event\n";
     enterEventDetails();
 }
 
@@ -400,8 +399,10 @@ void enterEventDetails() {
     cin >> time;
     cout << "Type of Event: ";
     cin >> type;
+
    
     //Budget details
+    cout << "Enter Budget Details:\n";
     int venueCost, serviceCost;
     cout << "Venue Cost: ";
     cin >> venueCost;
@@ -409,6 +410,7 @@ void enterEventDetails() {
     cin >> serviceCost;
 
    Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
+   cout << "Event created successfully!\n";
     
 }
 
