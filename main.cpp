@@ -49,26 +49,7 @@ public:
     }
 };
 
-class Budget{
-    //composition with event class
-public:
 
-    int venueCost;
-    int serviceCost;
-    int totalCost;
-    Services* services; 
-
-    Budget(int venueCost, int serviceCost) {
-        this->venueCost = venueCost;
-        this->serviceCost = serviceCost;
-        this->totalCost = venueCost + serviceCost + 0.1 * (venueCost + serviceCost); // 10% extra for commission
-        if (totalCost > 1000000) {
-            cout << "5'%' discount" << endl;
-            totalCost -= 0.05 * totalCost; // 5% discount
-            cout << "Total Cost after discount: " << totalCost << endl;
-        }
-    }
-};
 
 class Services{
     // composition with budget class
@@ -82,7 +63,12 @@ public:
     static int serialNo;
 
 
-    //constructor for custom services
+    // Default constructor
+    Services() : name(""), contact(0), type(""), price(0), avaialability(false), rating(0) {
+        serialNo++;
+    }
+
+    // Constructor for custom services
     Services(string name, int contact, string type, int price, bool avaialability, int rating) {
         serialNo ++;
         this->name = name;
@@ -132,7 +118,7 @@ public:
 
     
     void display() {
-        cout << "\nServicses Details:\n";
+        cout << "\nServices Details:\n";
         cout << "Name: " << name << endl;
         cout << "Contact: " << contact << endl;
         cout << "Type: " << type << endl;
@@ -216,6 +202,28 @@ class Venue{
     }
 };
 
+class Budget{
+    //composition with event class
+public:
+
+    int venueCost;
+    int serviceCost;
+    int totalCost;
+    Services* services; 
+
+    Budget(int venueCost, int serviceCost) {
+        this->venueCost = venueCost;
+        this->serviceCost = serviceCost;
+        this->totalCost = venueCost + serviceCost + 0.1 * (venueCost + serviceCost); // 10% extra for commission
+        if (totalCost > 1000000) {
+            cout << "5'%' discount" << endl;
+            totalCost -= 0.05 * totalCost; // 5% discount
+            cout << "Total Cost after discount: " << totalCost << endl;
+        }
+        services = new Services[10]; // Assuming a maximum of 10 services for simplicity
+    }
+};
+
 class Event {
     public:
         string name;
@@ -254,18 +262,33 @@ class Event {
         }
     
         // Add an attendee to the event
-        void addAttendee(const Attendee& attendee) {
+        void addAttendee() {
+
+            Attendee attendee;
+            cout << "Enter Attendee Name: ";
+            cin >> attendee.name;
+            cout << "Enter Attendee Contact: ";
+            cin >> attendee.contact;
+            cout << "RSVP (1 for Yes, 0 for No): ";
+            cin >> attendee.rsvp;
+            cout << "Has Guest (1 for Yes, 0 for No): ";
+            cin >> attendee.hasGuest;
+            if (attendee.hasGuest) {
+                cout << "Enter Guest Name: ";
+                cin >> attendee.guestName;
+                cout << "Needs Security for Guest (1 for Yes, 0 for No): ";
+                cin >> attendee.needsSecurity;
+            }
+
+            cout << "Attendee added successfully!" << endl;
+
             if (attendeeCount < maxAttendees) {
                 attendees[attendeeCount++] = attendee;
             } else {
                 cout << "Cannot add more attendees. Maximum capacity reached." << endl;
             }
         }
-    
-        // Set the budget for the event
-        void setBudget(int venueCost, int serviceCost) {
-            budget = new Budget(venueCost, serviceCost);
-        }
+
     
         // Display event details
         void display() {
@@ -302,6 +325,10 @@ class Event {
                 delete budget;
             }
             delete[] attendees; // Free dynamically allocated array
+            if (venue) {
+                delete venue;
+            }
+            
         }
     };
 
@@ -310,6 +337,12 @@ int Attendee::serialNo = 0;
 int Services::serialNo = 0;
 int Venue::serialNo = 0;
 
+void main_menu();
+void newEvent();
+void existingEvent();
+void enterEventDetails();
+// void chooseVenueAndServices(Event &event);
+void maintainAttendeeList(Event &event);
 
 void login(){
     string username, password;
@@ -326,6 +359,8 @@ void login(){
         login();
     }
 }
+
+
 
 void main_menu(){
     cout << "\nMain menu\n";
@@ -360,7 +395,11 @@ void main_menu(){
 
 // New customer workflow
 void newEvent() {
-    cout << "New Event\n";
+    cout << "Adding New Event\n";
+    //press any key to continue
+    cout << "Press any key to continue...\n";
+    cin.ignore();
+    cin.get();
     enterEventDetails();
 }
 
@@ -374,7 +413,7 @@ void existingEvent() {
     if (choice == 1) {
         enterEventDetails();
     } else if (choice == 2) {
-        updateBooking();
+        // updateBooking();
     } else {
         cout << "Invalid choice. Returning to main main_menu.\n";
         main_menu();
@@ -410,33 +449,65 @@ void enterEventDetails() {
     cin >> serviceCost;
 
    Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
-   cout << "Event created successfully!\n";
-    
+   cout << "Event & Budget details saved successfully!\n";
+
+   //press any key to continue
+    cout << "Press any key to continue...\n";
+    cin.ignore();
+    cin.get();
+
+    // Choose venue and services
+    // chooseVenueAndServices(event);
+    maintainAttendeeList(event);
 }
 
 
 
 // Choose venue and services
-void chooseVenueAndServices() {
-    cout << "Choose from the budget-friendly choices for venue and services.\n";
-    cout << "Or enter custom details if your desired choices are not listed.\n";
-    // Code to choose venue and services
-    maintainAttendeeList();
-}
+// void chooseVenueAndServices(Event &event) {
+//     cout << "Choose from the budget-friendly choices for venue and services.\n";
+//     cout << "Or enter custom details if your desired choices are not listed.\n";
+//     // Code to choose venue and services
+//     maintainAttendeeList(event);
+// }
 
 // Maintain attendee list
-void maintainAttendeeList() {
+void maintainAttendeeList(Event &event) {
     cout << "Maintaining Attendee List:\n";
-    // Code to maintain attendee list
+    cout << "1. Add Attendee\n";
+    cout << "2. Remove Attendee\n";
+    cout << "3. Display Attendee List\n";
+    int choice;
+    cin >> choice;
+
+    switch (choice) {
+        case 1: {
+            cout << "Adding Attendee:\n";
+            event.addAttendee(); // Call the addAttendee method of the Event class
+            break;
+        }
+        case 2: {
+            cout << "Removing Attendee:\n";
+            // Code to remove attendee
+            break;
+        }
+        case 3: {
+            cout << "Displaying Attendee List:\n";
+            event.attendees->display(); 
+            break;
+        }
+        default:
+            cout << "Invalid choice. Returning to main menu.\n";
+            main_menu();
+    }
     cout << "Event successfully created!\n";
     main_menu();
 }
 
-// Update existing booking
-void updateBooking() {
-    cout << "Updating Existing Booking:\n";
-    // Code to update existing booking
-    main_menu();
-}
 
+int main() {
+    cout << "Welcome to the Event Management System!\n";
+    login();
+    return 0;
+}
 
