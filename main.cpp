@@ -364,9 +364,12 @@ void main_menu();
 void newEvent();
 void existingEvent();
 void enterEventDetails();
+void updateExistingEvent();
 // void chooseVenueAndServices(Event &event);
-void maintainAttendeeList(Event &event);
+void updateAttendeeList();
+void updateEventDetails();
 void displayEventDetails();
+void updateEventDetails();
 
 void login() {
     cout<<"Login\n";
@@ -403,7 +406,7 @@ void login() {
 
 
 
-// Function to display the main menu and handle user input
+// Welcome function
 void welcome(){
     cout << "Welcome to the Event Planner and Budget Tracker System!\n";
     cout << "Project By:\n";
@@ -420,6 +423,7 @@ void welcome(){
 
 }
 
+// Main menu function
 void main_menu() {
     cout << "Main Menu:\n";
     cout << "1. New Event\n";
@@ -577,6 +581,7 @@ void existingEvent() {
         case 2:
             cout << "Updating Existing Booking:\n";
             // Code to update existing booking
+            updateExistingEvent();
             break;
         case 3:
             main_menu();
@@ -661,43 +666,87 @@ void displayEventDetails(){
         } else {
             cout << "Error: Could not open event.csv" << endl;
         }
-}
+        cout << "Press ENTER key to continue...\n";
+        cin.ignore();
+        cin.get();
+        main_menu();
+    }
 
-// Maintain attendee list for existing event
-void maintainAttendeeList(Event &event) {
-    cout << "Maintaining Attendee List:\n";
-    cout << "1. Add Attendee\n";
-    cout << "2. Remove Attendee\n";
-    cout << "3. Display Attendee List\n";
+// Update existing booking    
+void updateExistingEvent() {
+    cout << "Updating Existing Event:\n";
+    // Code to update existing booking
+    cout << "1. Update Event Details\n";
+    cout << "2. Update Venue\n";
+    cout << "3. Update Services\n";
+    cout << "4. Update Attendee List\n";
+    cout << "5. Return to Main Menu\n";
+    cout << "Event successfully updated!\n";
+    cout << "Press ENTER key to continue...\n";
+    cout << "Please select an option: ";
     int choice;
     cin >> choice;
 
-    switch (choice) {
-        case 1: {
-            cout << "Adding Attendee:\n";
-            event.addAttendee(); // Call the addAttendee method of the Event class
+    switch(choice) {
+        case 1:
+            cout << "Updating Event Details:\n";
+            updateEventDetails();
             break;
-        }
-        case 2: {
-            cout << "Removing Attendee:\n";
-            // Code to remove attendee
+        case 2:
+            cout << "Updating Venue:\n";
+            // Code to update venue
             break;
-        }
-        case 3: {
-            cout << "Displaying Attendee List:\n";
-            event.attendees->display(); 
+        case 3:
+            cout << "Updating Services:\n";
+            // Code to update services
             break;
-        }
-        default:
-            cout << "Invalid choice. Returning to main menu.\n";
+        case 4:
+            cout << "Updating Attendee List:\n";
+            updateAttendeeList();
+            break;
+        case 5:
             main_menu();
+            break;
+        default:
+            cout << "Invalid choice. Please try again.\n";
+            updateExistingEvent();
     }
-    cout << "Event successfully created!\n";
-    main_menu();
+    cout << "Press ENTER key to continue...\n";
+    cin.ignore();
+    cin.get();
+    existingEvent();
+}
+
+// Update event details
+void updateEventDetails() {
+    cout<< "Option selected: Update Event Details\n";
+    // displayEventDetails();
+    cout << "Enter Event Serial No to update: ";
+    int serialNo;
+    cin >> serialNo;
+    
+    cout << "Do you want to update the event name? (1 for Yes, 0 for No): ";
+    int choice;
+    cin >> choice;
+    string line;
+    ifstream file("event.csv");
+    if (file.is_open()) {
+        stringstream ss;
+        while (getline(file, line)) {
+            ss << line << endl;
+        }
+        file.close();
+    } else {
+        cout << "Error: Could not open event.csv" << endl;
+    }
+    string updatedLine;
+}
+
+void updateAttendeeList(){
+    cout<< "Option selected: Update Attendee List\n";
 }
 
 // Main function
-
 int main() {
     login();
     return 0;
