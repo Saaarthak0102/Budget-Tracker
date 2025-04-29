@@ -150,8 +150,14 @@ class Venue{
     int capacity;
     int price;
     bool availability;
+    string rating;
 
-    //constructor for custom venue
+    // Default constructor
+    Venue() : name(""), location(""), contact(0), capacity(0), price(0), availability(false),rating(0) {
+        serialNo++;
+    }
+
+    // Constructor for custom venue
     Venue(string name, string location, int contact, int capacity, int price, bool availability) {
         this->name = name;
         this->location = location;
@@ -164,9 +170,9 @@ class Venue{
 
     //constructor for reading from file
     Venue(int searchSerialNo) {
-        ifstream file("venue.csv");
+        ifstream file("venues.csv");
         if (!file.is_open()) {
-            cerr << "Error: Could not open venue.csv" << endl;
+            cerr << "Error: Could not open venues.csv" << endl;
             return;
         }
 
@@ -365,7 +371,7 @@ void newEvent();
 void existingEvent();
 void enterEventDetails();
 void updateExistingEvent();
-// void chooseVenueAndServices(Event &event);
+void chooseVenueAndServices(Event &event);
 void updateAttendeeList();
 void updateEventDetails();
 void displayEventDetails();
@@ -552,7 +558,8 @@ void addAttendeeList(Event &event, string filename) {
     cout << "Press ENTER key to continue...\n";
     cin.ignore();
     cin.get();
-    main_menu();
+    
+    // chooseVenueAndServices(event);
 }
 
 // Choose venue and services
@@ -677,12 +684,9 @@ void updateExistingEvent() {
     cout << "Updating Existing Event:\n";
     // Code to update existing booking
     cout << "1. Update Event Details\n";
-    cout << "2. Update Venue\n";
-    cout << "3. Update Services\n";
-    cout << "4. Update Attendee List\n";
-    cout << "5. Return to Main Menu\n";
-    cout << "Event successfully updated!\n";
-    cout << "Press ENTER key to continue...\n";
+    cout << "2. Update Attendee List\n";
+    cout << "3. Return to Main Menu\n";
+
     cout << "Please select an option: ";
     int choice;
     cin >> choice;
@@ -693,18 +697,10 @@ void updateExistingEvent() {
             updateEventDetails();
             break;
         case 2:
-            cout << "Updating Venue:\n";
-            // Code to update venue
-            break;
-        case 3:
-            cout << "Updating Services:\n";
-            // Code to update services
-            break;
-        case 4:
             cout << "Updating Attendee List:\n";
             updateAttendeeList();
             break;
-        case 5:
+        case 3:
             main_menu();
             break;
         default:
@@ -717,30 +713,137 @@ void updateExistingEvent() {
     existingEvent();
 }
 
-// Update event details
+
 void updateEventDetails() {
-    cout<< "Option selected: Update Event Details\n";
-    // displayEventDetails();
+    cout << "Option selected: Update Event Details\n";
+    
+    // Display current events
+    cout << "Displaying Event Booking:\n";
+    ifstream file("event.csv");
+    if (!file.is_open()) {
+        cout << "Error: Could not open event.csv" << endl;
+        return;
+    }
+
+    vector<string> lines;
+    string line;
+    while (getline(file, line)) {
+        cout << line << endl;
+        lines.push_back(line);
+    }
+    file.close();
+
     cout << "Enter Event Serial No to update: ";
     int serialNo;
     cin >> serialNo;
-    
-    cout << "Do you want to update the event name? (1 for Yes, 0 for No): ";
+
+    string updatedName = "", updatedHostName = "", updatedHostContact = "";
+    string updatedLocation = "", updatedDate = "", updatedTime = "", updatedType = "";
     int choice;
+
+    cout << "Do you want to update the event name? (1 for Yes, 0 for No): ";
     cin >> choice;
-    string line;
-    ifstream file("event.csv");
-    if (file.is_open()) {
-        stringstream ss;
-        while (getline(file, line)) {
-            ss << line << endl;
-        }
-        file.close();
-    } else {
-        cout << "Error: Could not open event.csv" << endl;
+    if (choice == 1) {
+        cout << "Enter updated event name: ";
+        cin.ignore();
+        getline(cin, updatedName);
     }
-    string updatedLine;
+
+    cout << "Do you want to update the host name? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated host name: ";
+        cin.ignore();
+        getline(cin, updatedHostName);
+    }
+
+    cout << "Do you want to update the host contact? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated host contact: ";
+        cin.ignore();
+        getline(cin, updatedHostContact);
+    }
+
+    cout << "Do you want to update the location? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated location: ";
+        cin.ignore();
+        getline(cin, updatedLocation);
+    }
+
+    cout << "Do you want to update the date? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated date (YYYY-MM-DD): ";
+        cin.ignore();
+        getline(cin, updatedDate);
+    }
+
+    cout << "Do you want to update the time? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated time (HH:MM): ";
+        cin.ignore();
+        getline(cin, updatedTime);
+    }
+
+    cout << "Do you want to update the type? (1 for Yes, 0 for No): ";
+    cin >> choice;
+    if (choice == 1) {
+        cout << "Enter updated type: ";
+        cin.ignore();
+        getline(cin, updatedType);
+    }
+
+    // Update the event in the vector
+    bool found = false;
+    for (size_t i = 0; i < lines.size(); ++i) {
+        stringstream ss(lines[i]);
+        string temp;
+        getline(ss, temp, ',');
+        int currentSerialNo = stoi(temp);
+
+        if (currentSerialNo == serialNo) {
+            vector<string> fields;
+            fields.push_back(to_string(serialNo)); // updated serial no
+
+            getline(ss, temp, ','); fields.push_back(updatedName.empty() ? temp : updatedName);
+            getline(ss, temp, ','); fields.push_back(updatedHostName.empty() ? temp : updatedHostName);
+            getline(ss, temp, ','); fields.push_back(updatedHostContact.empty() ? temp : updatedHostContact);
+            getline(ss, temp, ','); fields.push_back(updatedLocation.empty() ? temp : updatedLocation);
+            getline(ss, temp, ','); fields.push_back(updatedDate.empty() ? temp : updatedDate);
+            getline(ss, temp, ','); fields.push_back(updatedTime.empty() ? temp : updatedTime);
+            getline(ss, temp, ','); fields.push_back(updatedType.empty() ? temp : updatedType);
+
+            string updatedLine;
+            for (size_t j = 0; j < fields.size(); ++j) {
+                updatedLine += fields[j];
+                if (j < fields.size() - 1) updatedLine += ",";
+            }
+
+            lines[i] = updatedLine;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Error: Event with serial number " << serialNo << " not found." << endl;
+        return;
+    }
+
+    // Write updated lines to file
+    ofstream outFile("event.csv");
+    for (const string& l : lines) {
+        outFile << l << endl;
+    }
+    outFile.close();
+
+    cout << "Event details updated successfully!" << endl;
 }
+
 
 void updateAttendeeList(){
     cout<< "Option selected: Update Attendee List\n";
@@ -752,14 +855,14 @@ int main() {
     return 0;
 }
 
-/*void chooseVenueAndServices(Event &event) {
+void chooseVenueAndServices(Event &event) {
     cout << "\n=== Choosing Venue and Services ===" << endl;
     
     // Display available venues within budget and available on event date
     cout << "\nAvailable Venues (Budget: " << event.budget->venueCost << "):" << endl;
-    ifstream venueFile("venue.csv");
+    ifstream venueFile("venues.csv");
     if (!venueFile.is_open()) {
-        cerr << "Error: Could not open venue.csv" << endl;
+        cerr << "Error: Could not open venues.csv" << endl;
         return;
     }
 
@@ -936,7 +1039,7 @@ int main() {
 
     // Clear any error state from non-numeric input
     cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     // Update the event's services
     for (size_t i = 0; i < selectedServices.size(); i++) {
@@ -979,4 +1082,11 @@ int main() {
 
     cout << "\nVenue and services selection complete." << endl;
     cout << "Final total cost: " << event.budget->totalCost << endl;
-}*/
+
+    //press ENTER key to continue
+    cout << "Press ENTER key to continue...\n";
+    cin.ignore();
+    cin.get();
+    main_menu();
+
+}
