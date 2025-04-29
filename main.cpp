@@ -378,68 +378,102 @@ void displayEventDetails();
 void updateEventDetails();
 
 void login() {
-    cout<<"Login\n";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\tLOGIN TO THE SYSTEM\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+
     string username, password;
     int attempts = 0;
 
     while (attempts < 3) {
-        cout << "Enter username: ";
+        cout << "=========================================================================================================\n";
+        cout << "| Enter username: ";
         cin >> username;
-        cout << "Enter password: ";
+        cout << "| Enter password: ";
         cin >> password;
+        cout << "=========================================================================================================\n";
 
         if (username == "admin" && password == "admin") {
-            cout << "Login successful!" << endl;
+            cout << "=========================================================================================================\n";
+            cout << "| Login successful!                                                                                   |\n";
+            cout << "=========================================================================================================\n";
 
-            //press ENTER key to continue
-            cout << "Press ENTER key to continue...\n";
+            // Press ENTER key to continue
+            cout << "=========================================================================================================\n";
+            cout << "| Press ENTER key to continue...                                                                      |\n";
+            cout << "=========================================================================================================\n";
             cin.ignore();
             cin.get();
 
-            // Call the main menu function
+            // Call the welcome function
             welcome();
             return;
         } else {
             attempts++;
-            cout << "Invalid credentials. Attempts remaining: " << (3 - attempts) << endl;
+            cout << "=========================================================================================================\n";
+            cout << "| Invalid credentials. Attempts remaining: " << (3 - attempts) << "                                      |\n";
+            cout << "=========================================================================================================\n";
         }
     }
 
-    cout << "Too many failed attempts."<< endl;
-    cout << "Exiting the program."<<endl;
+    cout << "=========================================================================================================\n";
+    cout << "| Too many failed attempts. Exiting the program.                                                      |\n";
+    cout << "=========================================================================================================\n";
     exit(0);
 }
 
 
-
 // Welcome function
-void welcome(){
-    cout << "Welcome to the Event Planner and Budget Tracker System!\n";
-    cout << "Project By:\n";
-    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
-    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
-    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
-    cout << "1. Sarthak Sabharwal\t\t\t\t2401020234\n";
+void welcome() {
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\tWELCOME TO THE EVENT PLANNER AND BUDGET TRACKER SYSTEM\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t==========================================================\t\t|\n";
+    cout << "|\t\t\t\t|\t   PROJECT BY:\t\t\t\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Batch: A-8         Semester - IInd\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Maulshree Sharma        2401020218\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Pratyaksh Tyagi         2401020232\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Keshav Maini            2401020233\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Sarthak Sabharwal       2401020234\t\t |\t\t|\n";
+    cout << "|\t\t\t\t==========================================================\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|  Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
 
-    //press ENTER key to continue
-    cout << "Press ENTER key to continue...\n";
     cin.sync();
     cin.get();
     main_menu();
-
 }
 
 // Main menu function
 void main_menu() {
-    cout << "Main Menu:\n";
-    cout << "1. New Event\n";
-    cout << "2. Existing Event\n";
-    cout << "3. Exit\n";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\tMAIN MENU\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+    cout << "| Choice | Action                                                                                      |\n";
+    cout << "---------------------------------------------------------------------------------------------------------\n";
+    cout << "|   1    | New Event                                                                                   |\n";
+    cout << "|   2    | Existing Event                                                                              |\n";
+    cout << "|   3    | Exit                                                                                        |\n";
+    cout << "=========================================================================================================\n";
 
     cout << "Please select an option: ";
     int choice;
     cin >> choice;
-    switch(choice) {
+
+    switch (choice) {
         case 1:
             newEvent();
             break;
@@ -447,61 +481,122 @@ void main_menu() {
             existingEvent();
             break;
         case 3:
-            cout << "Exiting the program. Goodbye!\n";
+            cout << "=========================================================================================================\n";
+            cout << "| Exiting the program. Goodbye!                                                                        |\n";
+            cout << "=========================================================================================================\n";
             exit(0);
         default:
-            cout << "Invalid choice. Please try again.\n";
+            cout << "=========================================================================================================\n";
+            cout << "| Invalid choice. Please try again.                                                                    |\n";
+            cout << "=========================================================================================================\n";
             main_menu();
     }
 }
 
 // New customer workflow
 void newEvent() {
-    cout << "Option Selected: Adding New Event\n";
-    //press ENTER key to continue
-    cout << "Press ENTER key to continue...\n";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tADDING NEW EVENT\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+
+    // Press ENTER key to continue
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
     cin.ignore();
     cin.get();
+
     enterEventDetails();
 }
 
 // Enter event details
 void enterEventDetails() {
-    cout << "Enter Event Details:\n";
-    string name, hostname, hostcontact, location, date, time, type;
-    cout << "Event Name: ";
-    cin >> name;
-    cin.ignore(); // Fix newline buffer
-    cout << "Host Name: ";
-    cin >> hostname;
-    cin.ignore(); // Fix newline buffer
-    cout << "Host Contact: ";
-    cin >> hostcontact;
-    cin.ignore(); // Fix newline buffer
-    cout << "Location: ";
-    cin >> location;
-    cin.ignore(); // Fix newline buffer
-    cout << "Date (YYYY-MM-DD): ";
-    cin >> date;
-    cin.ignore(); // Fix newline buffer
-    cout << "Time (HH:MM): ";
-    cin >> time;
-    cin.ignore(); // Fix newline buffer
-    cout << "Type of Event: ";
-    cin >> type;
-    cin.ignore(); // Fix newline buffer
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tENTER EVENT DETAILS\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
 
-   
-    //Budget details
-    cout << "Enter Budget Details:\n";
+    string name, hostname, hostcontact, location, date, time, type;
+
+    cout << "=========================================================================================================\n";
+    cout << "| Event Name:                                                                                          |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> name;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Host Name:                                                                                           |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> hostname;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Host Contact:                                                                                        |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> hostcontact;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Location:                                                                                            |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> location;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Date (YYYY-MM-DD):                                                                                   |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> date;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Time (HH:MM):                                                                                        |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> time;
+    cin.ignore();
+
+    cout << "=========================================================================================================\n";
+    cout << "| Type of Event:                                                                                       |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    cin >> type;
+    cin.ignore();
+
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tENTER BUDGET DETAILS\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+
     int venueCost, serviceCost;
-    cout << "Venue Cost: ";
+
+    cout << "=========================================================================================================\n";
+    cout << "| Venue Cost:                                                                                          |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> venueCost;
-    cout << "Service Cost: ";
+
+    cout << "=========================================================================================================\n";
+    cout << "| Service Cost:                                                                                        |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> serviceCost;
 
-   Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost); 
-   cout << "Event & Budget details saved successfully!\n";
+    Event event(name, hostname, hostcontact, location, date, time, type, 100, venueCost, serviceCost);
+    cout << "=========================================================================================================\n";
+    cout << "| Event & Budget details saved successfully!                                                          |\n";
+    cout << "=========================================================================================================\n";
 
     // Create attendee file
     string filename = name.substr(0, 2) + hostname.substr(0, 2) + "_attendee.csv";
@@ -509,33 +604,52 @@ void enterEventDetails() {
     if (attendeeFile.is_open()) {
         attendeeFile << "SerialNo,Name,Contact,RSVP,HasGuest,GuestName,NeedsSecurity\n";
         attendeeFile.close();
-        cout << "Attendee file created: " << filename << endl;
+        cout << "=========================================================================================================\n";
+        cout << "| Attendee file created: " << filename << "                                                          |\n";
+        cout << "=========================================================================================================\n";
     } else {
-        cout << "Error: Could not create attendee file." << endl;
+        cout << "=========================================================================================================\n";
+        cout << "| Error: Could not create attendee file.                                                              |\n";
+        cout << "=========================================================================================================\n";
     }
 
-   //press ENTER key to continue
-    cout << "Press ENTER key to continue...\n";
+    // Press ENTER key to continue
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
     cin.ignore();
     cin.get();
 
     // Choose venue and services
-    // chooseVenueAndServices(event);
-    addAttendeeList(event,filename);
+    addAttendeeList(event, filename);
 }
 
 void addAttendeeList(Event &event, string filename) {
-    cout << "How many attendees do you want to add? ";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tADD ATTENDEE LIST\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+
+    cout << "=========================================================================================================\n";
+    cout << "| How many attendees do you want to add?                                                              |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     int numAttendees;
     cin >> numAttendees;
 
     for (int i = 0; i < numAttendees; i++) {
         if (event.attendeeCount >= event.maxAttendees) {
-            cout << "Cannot add more attendees. Maximum capacity reached." << endl;
+            cout << "=========================================================================================================\n";
+            cout << "| Cannot add more attendees. Maximum capacity reached.                                                |\n";
+            cout << "=========================================================================================================\n";
             break;
         }
 
-        cout << "Adding Attendee " << (i + 1) << ":\n";
+        cout << "=========================================================================================================\n";
+        cout << "| Adding Attendee " << (i + 1) << ":                                                                    |\n";
+        cout << "=========================================================================================================\n";
         event.addAttendee(); // Call the addAttendee method of the Event class
 
         // Append attendee details to the file
@@ -548,17 +662,28 @@ void addAttendeeList(Event &event, string filename) {
                          << event.attendees[event.attendeeCount - 1].guestName << ","
                          << event.attendees[event.attendeeCount - 1].needsSecurity << endl;
             attendeeFile.close();
-            cout << "Attendee details saved to file: " << filename << endl;
+
+            cout << "=========================================================================================================\n";
+            cout << "| Attendee details saved to file: " << filename << "                                                  |\n";
+            cout << "=========================================================================================================\n";
         } else {
-            cout << "Error: Could not open attendee file for writing." << endl;
+            cout << "=========================================================================================================\n";
+            cout << "| Error: Could not open attendee file for writing.                                                    |\n";
+            cout << "=========================================================================================================\n";
         }
     }
 
-    cout << "Attendee list updated successfully!\n";
-    cout << "Press ENTER key to continue...\n";
+    cout << "=========================================================================================================\n";
+    cout << "| Attendee list updated successfully!                                                                 |\n";
+    cout << "=========================================================================================================\n";
+
+    // Press ENTER key to continue
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                      |\n";
+    cout << "=========================================================================================================\n";
     cin.ignore();
     cin.get();
-    
+
     // chooseVenueAndServices(event);
 }
 
@@ -573,141 +698,209 @@ void addAttendeeList(Event &event, string filename) {
 
 // Existing customer workflow
 void existingEvent() {
-    cout << "Option Selected: Existing Event\n";
-    cout << "1. Display Event Booking\n";
-    cout << "2. Update Existing Booking\n";
-    cout << "3. Return to Main Menu\n";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tEXISTING EVENT MENU\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+    cout << "| Choice | Action                                                                                      |\n";
+    cout << "---------------------------------------------------------------------------------------------------------\n";
+    cout << "|   1    | Display Event Booking                                                                       |\n";
+    cout << "|   2    | Update Existing Booking                                                                     |\n";
+    cout << "|   3    | Return to Main Menu                                                                         |\n";
+    cout << "=========================================================================================================\n";
+
     cout << "Please select an option: ";
     int choice;
     cin >> choice;
 
-    switch(choice) {
+    switch (choice) {
         case 1:
             displayEventDetails();
             break;
         case 2:
-            cout << "Updating Existing Booking:\n";
-            // Code to update existing booking
+            cout << "\n\n";
+            cout << "=========================================================================================================\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "|\t\t\t\t\tUPDATING EXISTING BOOKING\t\t\t\t|\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "=========================================================================================================\n";
             updateExistingEvent();
             break;
         case 3:
             main_menu();
             break;
         default:
-            cout << "Invalid choice. Please try again.\n";
+            cout << "=========================================================================================================\n";
+            cout << "| Invalid choice. Please try again.                                                                    |\n";
+            cout << "=========================================================================================================\n";
             existingEvent();
     }
 }
 
 // Display event booking details
-void displayEventDetails(){
-    cout << "Displaying Event Booking:\n";
-        // Code to display event booking
-        ifstream file("event.csv");
-        if (file.is_open()) {
-            string line;
-            while (getline(file, line)) {
-                cout << line << endl;
-            }
-            file.close();
-        } else {
-            cout << "Error: Could not open event.csv" << endl;
-        }
-        cout<< "Enter Event Serial No to view details: ";
-        int serialNo;
-        cin >> serialNo;
-        //search for event in event.csv
-        ifstream eventFile("event.csv");
-        if (eventFile.is_open()) {
-            string line;
-            bool isHeader = true; // Flag to skip the header row
-            while (getline(eventFile, line)) {
-                if (isHeader) {
-                    isHeader = false; // Skip the first line (header)
-                    continue;
-                }
-        
-                stringstream ss(line);
-                string temp;
-                int currentSerialNo;
-                getline(ss, temp, ',');
-        
-                // Validate and parse the serial number
-                try {
-                    currentSerialNo = stoi(temp);
-                } catch (const invalid_argument& e) {
-                    cerr << "Error: Invalid serial number format in the file." << endl;
-                    continue; // Skip this line and move to the next
-                }
-        
-                if (currentSerialNo == serialNo) {
-                    cout << "Event Details:\n" << line << endl;
-        
-                    // Extract the first two characters after the first comma and the second comma
-                    size_t firstComma = line.find(','); // Find the position of the first comma
-                    size_t secondComma = line.find(',', firstComma + 1); // Find the position of the second comma
+void displayEventDetails() {
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tDISPLAY EVENT DETAILS\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
 
-                    // Check if both commas were found
+    // Display all event bookings
+    cout << "=========================================================================================================\n";
+    cout << "| Event Bookings:                                                                                      |\n";
+    cout << "=========================================================================================================\n";
+
+    ifstream file("event.csv");
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            cout << line << endl;
+        }
+        file.close();
+    } else {
+        cout << "=========================================================================================================\n";
+        cout << "| Error: Could not open event.csv                                                                      |\n";
+        cout << "=========================================================================================================\n";
+        return;
+    }
+
+    cout << "=========================================================================================================\n";
+    cout << "| Enter Event Serial No to view details:                                                              |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
+    int serialNo;
+    cin >> serialNo;
+
+    // Search for the event in event.csv
+    ifstream eventFile("event.csv");
+    if (eventFile.is_open()) {
+        string line;
+        bool isHeader = true; // Flag to skip the header row
+        while (getline(eventFile, line)) {
+            if (isHeader) {
+                isHeader = false; // Skip the first line (header)
+                continue;
+            }
+
+            stringstream ss(line);
+            string temp;
+            int currentSerialNo;
+            getline(ss, temp, ',');
+
+            // Validate and parse the serial number
+            try {
+                currentSerialNo = stoi(temp);
+            } catch (const invalid_argument& e) {
+                cerr << "Error: Invalid serial number format in the file." << endl;
+                continue; // Skip this line and move to the next
+            }
+
+            if (currentSerialNo == serialNo) {
+                cout << "=========================================================================================================\n";
+                cout << "| Event Details:                                                                                       |\n";
+                cout << "=========================================================================================================\n";
+                cout << line << endl;
+
+                // Extract the first two characters after the first comma and the second comma
+                size_t firstComma = line.find(','); // Find the position of the first comma
+                size_t secondComma = line.find(',', firstComma + 1); // Find the position of the second comma
+
+                // Check if both commas were found
                 if (firstComma != string::npos && secondComma != string::npos) {
                     string part1 = line.substr(firstComma + 1, 2); // Extract 2 characters after the first comma
                     string part2 = line.substr(secondComma + 1, 2); // Extract 2 characters after the second comma
                     string filename = part1 + part2 + "_attendee.csv";
 
-                   // Display attendees from attendee file
+                    // Display attendees from attendee file
                     ifstream attendeeFile(filename);
                     if (attendeeFile.is_open()) {
+                        cout << "=========================================================================================================\n";
+                        cout << "| Attendee List:                                                                                       |\n";
+                        cout << "=========================================================================================================\n";
                         string attendeeLine;
-                        cout << "Attendee List:\n";
                         while (getline(attendeeFile, attendeeLine)) {
                             cout << attendeeLine << endl;
                         }
                         attendeeFile.close();
+                    } else {
+                        cout << "=========================================================================================================\n";
+                        cout << "| Error: Could not open attendee file.                                                                |\n";
+                        cout << "=========================================================================================================\n";
                     }
-                 } else {
-                    cout << "Error: Could not open attendee file." << endl;
                 }
                 break;
-                }
             }
-            eventFile.close();
-        } else {
-            cout << "Error: Could not open event.csv" << endl;
         }
-        cout << "Press ENTER key to continue...\n";
-        cin.ignore();
-        cin.get();
-        main_menu();
+        eventFile.close();
+    } else {
+        cout << "=========================================================================================================\n";
+        cout << "| Error: Could not open event.csv                                                                      |\n";
+        cout << "=========================================================================================================\n";
     }
+
+    // Press ENTER key to continue
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
+    cin.ignore();
+    cin.get();
+    main_menu();
+}
 
 // Update existing booking    
 void updateExistingEvent() {
-    cout << "Updating Existing Event:\n";
-    // Code to update existing booking
-    cout << "1. Update Event Details\n";
-    cout << "2. Update Attendee List\n";
-    cout << "3. Return to Main Menu\n";
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tUPDATING EXISTING EVENT\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+    cout << "| Choice | Action                                                                                      |\n";
+    cout << "---------------------------------------------------------------------------------------------------------\n";
+    cout << "|   1    | Update Event Details                                                                        |\n";
+    cout << "|   2    | Update Attendee List                                                                        |\n";
+    cout << "|   3    | Return to Main Menu                                                                         |\n";
+    cout << "=========================================================================================================\n";
 
     cout << "Please select an option: ";
     int choice;
     cin >> choice;
 
-    switch(choice) {
+    switch (choice) {
         case 1:
-            cout << "Updating Event Details:\n";
+            cout << "\n\n";
+            cout << "=========================================================================================================\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "|\t\t\t\t\tUPDATING EVENT DETAILS\t\t\t\t\t|\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "=========================================================================================================\n";
             updateEventDetails();
             break;
         case 2:
-            cout << "Updating Attendee List:\n";
+            cout << "\n\n";
+            cout << "=========================================================================================================\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "|\t\t\t\t\tUPDATING ATTENDEE LIST\t\t\t\t\t|\n";
+            cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+            cout << "=========================================================================================================\n";
             updateAttendeeList();
             break;
         case 3:
             main_menu();
             break;
         default:
-            cout << "Invalid choice. Please try again.\n";
+            cout << "=========================================================================================================\n";
+            cout << "| Invalid choice. Please try again.                                                                    |\n";
+            cout << "=========================================================================================================\n";
             updateExistingEvent();
     }
-    cout << "Press ENTER key to continue...\n";
+
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
     cin.ignore();
     cin.get();
     existingEvent();
@@ -715,13 +908,23 @@ void updateExistingEvent() {
 
 
 void updateEventDetails() {
-    cout << "Option selected: Update Event Details\n";
-    
+    cout << "\n\n";
+    cout << "=========================================================================================================\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\tUPDATE EVENT DETAILS\t\t\t\t\t|\n";
+    cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
+    cout << "=========================================================================================================\n";
+
     // Display current events
-    cout << "Displaying Event Booking:\n";
+    cout << "=========================================================================================================\n";
+    cout << "| Event Bookings:                                                                                      |\n";
+    cout << "=========================================================================================================\n";
+
     ifstream file("event.csv");
     if (!file.is_open()) {
-        cout << "Error: Could not open event.csv" << endl;
+        cout << "=========================================================================================================\n";
+        cout << "| Error: Could not open event.csv                                                                      |\n";
+        cout << "=========================================================================================================\n";
         return;
     }
 
@@ -733,7 +936,10 @@ void updateEventDetails() {
     }
     file.close();
 
-    cout << "Enter Event Serial No to update: ";
+    cout << "=========================================================================================================\n";
+    cout << "| Enter Event Serial No to update:                                                                    |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     int serialNo;
     cin >> serialNo;
 
@@ -741,7 +947,10 @@ void updateEventDetails() {
     string updatedLocation = "", updatedDate = "", updatedTime = "", updatedType = "";
     int choice;
 
-    cout << "Do you want to update the event name? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the event name? (1 for Yes, 0 for No):                                         |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated event name: ";
@@ -749,7 +958,10 @@ void updateEventDetails() {
         getline(cin, updatedName);
     }
 
-    cout << "Do you want to update the host name? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the host name? (1 for Yes, 0 for No):                                          |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated host name: ";
@@ -757,7 +969,10 @@ void updateEventDetails() {
         getline(cin, updatedHostName);
     }
 
-    cout << "Do you want to update the host contact? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the host contact? (1 for Yes, 0 for No):                                       |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated host contact: ";
@@ -765,7 +980,10 @@ void updateEventDetails() {
         getline(cin, updatedHostContact);
     }
 
-    cout << "Do you want to update the location? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the location? (1 for Yes, 0 for No):                                           |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated location: ";
@@ -773,7 +991,10 @@ void updateEventDetails() {
         getline(cin, updatedLocation);
     }
 
-    cout << "Do you want to update the date? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the date? (1 for Yes, 0 for No):                                               |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated date (YYYY-MM-DD): ";
@@ -781,7 +1002,10 @@ void updateEventDetails() {
         getline(cin, updatedDate);
     }
 
-    cout << "Do you want to update the time? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the time? (1 for Yes, 0 for No):                                               |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated time (HH:MM): ";
@@ -789,7 +1013,10 @@ void updateEventDetails() {
         getline(cin, updatedTime);
     }
 
-    cout << "Do you want to update the type? (1 for Yes, 0 for No): ";
+    cout << "=========================================================================================================\n";
+    cout << "| Do you want to update the type? (1 for Yes, 0 for No):                                               |\n";
+    cout << "=========================================================================================================\n";
+    cout << "| ";
     cin >> choice;
     if (choice == 1) {
         cout << "Enter updated type: ";
@@ -830,7 +1057,9 @@ void updateEventDetails() {
     }
 
     if (!found) {
-        cout << "Error: Event with serial number " << serialNo << " not found." << endl;
+        cout << "=========================================================================================================\n";
+        cout << "| Error: Event with serial number " << serialNo << " not found.                                        |\n";
+        cout << "=========================================================================================================\n";
         return;
     }
 
@@ -841,7 +1070,18 @@ void updateEventDetails() {
     }
     outFile.close();
 
-    cout << "Event details updated successfully!" << endl;
+    cout << "=========================================================================================================\n";
+    cout << "| Event details updated successfully!                                                                  |\n";
+    cout << "=========================================================================================================\n";
+
+
+    // Press ENTER key to continue
+    cout << "=========================================================================================================\n";
+    cout << "| Press ENTER key to continue...                                                                       |\n";
+    cout << "=========================================================================================================\n";
+    cin.ignore();
+    cin.get();
+    existingEvent();
 }
 
 
