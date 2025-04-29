@@ -246,25 +246,24 @@ class Event {
         string date;
         string time;
         string type;
-        static int serialNo;        // Static variable to keep track of event serial number
-    
-        Attendee* attendees;       // Aggregation with Attendee (array)
-        int attendeeCount;         // Number of attendees
-        int maxAttendees;          // Maximum capacity for attendees
-
-        Budget* budget;            // Composition with Budget
-
-        Venue* venue;              // Association with Venue
+        int serialNo; // Serial number for the event
+        Attendee* attendees;
+        int attendeeCount;
+        int maxAttendees;
+        Budget* budget;
+        Venue* venue;
     
         // Constructor
         Event(string name, string hostname, string hostcontact, string location, string date, string time, string type, int maxAttendees, int venueCost, int serviceCost)
             : name(name), hostname(hostname), hostcontact(hostcontact), location(location), date(date), time(time), type(type), maxAttendees(maxAttendees) {
-            attendees = new Attendee[maxAttendees]; // Dynamically allocate array for attendees
-            attendeeCount = 0;                      // Initialize attendee count
-            budget = new Budget(venueCost, serviceCost); // Initialize budget
-            venue = nullptr; // Initialize venue pointer
-            serialNo++; // Increment event serial number
-
+            attendees = new Attendee[maxAttendees];
+            attendeeCount = 0;
+            budget = new Budget(venueCost, serviceCost);
+            venue = nullptr;
+    
+            // Determine the next serial number from the file
+            serialNo = getNextSerialNo();
+    
             // Write event details to event.csv
             ofstream file("event.csv", ios::app); // Open file in append mode
             if (file.is_open()) {
@@ -274,9 +273,9 @@ class Event {
                     // Write the header if the file is empty
                     file << "SerialNo,EventName,HostName,HostContact,EventLocation,EventDate,EventTime,EventType,EventBudget\n";
                 }
-            
+    
                 // Write the event data
-                file << serialNo << "," << name << "," << hostname << "," << hostcontact << "," << location << "," 
+                file << serialNo << "," << name << "," << hostname << "," << hostcontact << "," << location << ","
                      << date << "," << time << "," << type << "," << budget->totalCost << endl;
                 file.close();
             } else {
@@ -284,6 +283,29 @@ class Event {
             }
         }
     
+        // Function to get the next serial number from the file
+        int getNextSerialNo() {
+            ifstream file("event.csv");
+            if (!file.is_open()) {
+                return 1; // Start with 1 if the file does not exist
+            }
+    
+            string line;
+            int lastSerialNo = 0;
+            while (getline(file, line)) {
+                stringstream ss(line);
+                string temp;
+                getline(ss, temp, ','); // Read the serial number
+                try {
+                    lastSerialNo = stoi(temp); // Update the last serial number
+                } catch (const invalid_argument& e) {
+                    continue; // Skip invalid lines
+                }
+            }
+            file.close();
+            return lastSerialNo + 1; // Increment the last serial number
+        }
+
         // Add an attendee to the event
         void addAttendee() {
 
@@ -359,7 +381,6 @@ class Event {
 int Attendee::serialNo = 0;
 int Services::serialNo = 0;
 int Venue::serialNo = 0;
-int Event::serialNo = 0;
 
 // Function prototypes
 void login();
@@ -694,6 +715,142 @@ void addAttendeeList(Event &event, string filename) {
 //     // Code to choose venue and services
 //     maintainAttendeeList(event);
 // }
+
+/*void chooseVenueAndServices(Event &event) {
+    ifstream venueFile("venues.csv");
+    vector<Venue> venues;
+    string line;
+
+    cout << "\n--- Available Venues ---\n";
+    getline(venueFile, line); // Skip header if present
+
+    while (getline(venueFile, line)) {
+        stringstream ss(line);
+        string temp;
+        Venue v;
+
+        getline(ss, temp, ',');
+        v.serialNo = stoi(temp);
+        getline(ss, v.name, ',');
+        getline(ss, v.location, ',');
+        getline(ss, temp, ',');
+        v.price = stoi(temp);
+        getline(ss, v.unavailableDates, ',');
+        getline(ss, temp, ',');
+        v.rating = stof(temp);
+
+        if (v.price <= event.budget->venueCost && v.unavailableDates.find(event.date) == string::npos) {
+            venues.push_back(v);
+            cout << v.serialNo << ". " << v.name << " | " << v.address << " | Rs." << v.price
+                 << " | Rating: " << v.rating << "\n";
+        }
+    }
+    venueFile.close();
+
+    int venueChoice;
+    cout << "Enter the serial number of the venue you want to choose: ";
+    cin >> venueChoice;
+
+    Venue selectedVenue;
+    bool found = false;
+    for (auto &v : venues) {
+        if (v.serialNo == venueChoice) {
+            selectedVenue = v;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Invalid venue selection.\n";
+        return;
+    }
+
+    // Deduct venue cost and assign venue
+    event.budget->venueCost -= selectedVenue.price;
+    event.budget->serviceCost += event.budget->venueCost; // Transfer leftover
+
+    event.venue = new Venue(selectedVenue.name, selectedVenue.location, 0, 0, selectedVenue.price, true);
+
+    ofstream outFile("v_and_s_" + string(1, event.hostname[0]) + "_" + event.date + ".csv");
+    outFile << "Selected Venue:\n" << selectedVenue.name << "," << selectedVenue.address << "," << selectedVenue.price << "," << selectedVenue.rating << "\n\n";
+    outFile << "Selected Services:\n";
+
+    // Now choose services
+    ifstream serviceFile("services.csv");
+    vector<Services> services;
+
+    getline(serviceFile, line); // Skip header
+    while (getline(serviceFile, line)) {
+        stringstream ss(line);
+        Services s;
+        string temp;
+
+        getline(ss, temp, ',');
+        s.serialNo = stoi(temp);
+        getline(ss, s.name, ',');
+        getline(ss, temp, ',');
+        s.contact = stoll(temp);
+        getline(ss, s.type, ',');
+        getline(ss, temp, ',');
+        s.price = stoi(temp);
+        getline(ss, temp, ',');
+        s.avaialability = (temp == "True");
+        getline(ss, temp, ',');
+        s.rating = stof(temp);
+
+        if (s.avaialability && s.price <= event.budget->serviceCost) {
+            services.push_back(s);
+        }
+    }
+
+    serviceFile.close();
+    cout << "\n--- Available Services ---\n";
+    int serviceBudget = event.budget->serviceCost;
+    int i = 0;
+    char input[10];
+
+    while (true) {
+        cout << "\nBudget Left: Rs." << serviceBudget << "\n";
+        cout << "Enter service serial number to choose or any character to stop:\n";
+
+        for (auto &s : services) {
+            cout << s.serialNo << ". " << s.name << " | " << s.type << " | Rs." << s.price << " | Rating: " << s.rating << "\n";
+        }
+
+        cin >> input;
+
+        if (!isdigit(input[0]))
+            break;
+
+        int choice = stoi(input);
+        bool valid = false;
+
+        for (auto &s : services) {
+            if (s.serialNo == choice && s.price <= serviceBudget) {
+                event.budget->services[i++] = Services(s.name, s.contact, s.type, s.price, true, s.rating);
+                serviceBudget -= s.price;
+
+                outFile << s.name << "," << s.contact << "," << s.type << "," << s.price << "," << s.rating << "\n";
+                valid = true;
+                break;
+            }
+        }
+
+        if (!valid) {
+            cout << "Invalid choice or service exceeds remaining budget.\n";
+        }
+
+        if (serviceBudget <= 0) {
+            cout << "Service budget exhausted.\n";
+            break;
+        }
+    }
+
+    outFile.close();
+    cout << "\nVenue and Services selection saved.\n";
+}
+*/
 
 
 // Existing customer workflow
@@ -1093,240 +1250,4 @@ void updateAttendeeList(){
 int main() {
     login();
     return 0;
-}
-
-void chooseVenueAndServices(Event &event) {
-    cout << "\n=== Choosing Venue and Services ===" << endl;
-    
-    // Display available venues within budget and available on event date
-    cout << "\nAvailable Venues (Budget: " << event.budget->venueCost << "):" << endl;
-    ifstream venueFile("venues.csv");
-    if (!venueFile.is_open()) {
-        cerr << "Error: Could not open venues.csv" << endl;
-        return;
-    }
-
-    vector<Venue> availableVenues;
-    string line;
-    bool headerSkipped = false;
-
-    while (getline(venueFile, line)) {
-        if (!headerSkipped) {
-            headerSkipped = true;
-            continue; // Skip header line
-        }
-
-        stringstream ss(line);
-        string temp;
-        Venue venue;
-        
-        // Read venue data from CSV
-        getline(ss, temp, ','); // Serial number (we don't need it here)
-        getline(ss, venue.name, ',');
-        getline(ss, venue.location, ',');
-        getline(ss, temp, ',');
-        venue.price = stoi(temp);
-        getline(ss, temp, ','); // Dates unavailable
-        string unavailableDates = temp;
-        getline(ss, temp, ',');
-        venue.rating = stof(temp);
-
-        // Check if venue is within budget and available on event date
-        if (venue.price <= event.budget->venueCost) {
-            // Check date availability
-            if (unavailableDates.find(event.date) == string::npos) {
-                availableVenues.push_back(venue);
-            }
-        }
-    }
-    venueFile.close();
-
-    // Display available venues
-    if (availableVenues.empty()) {
-        cout << "No venues available within budget or on the selected date." << endl;
-        return;
-    }
-
-    for (size_t i = 0; i < availableVenues.size(); i++) {
-        cout << i+1 << ". " << availableVenues[i].name 
-             << " (Price: " << availableVenues[i].price 
-             << ", Location: " << availableVenues[i].location 
-             << ", Rating: " << availableVenues[i].rating << ")" << endl;
-    }
-
-    // Let user choose a venue
-    cout << "\nSelect a venue (1-" << availableVenues.size() << "): ";
-    int venueChoice;
-    cin >> venueChoice;
-
-    if (venueChoice < 1 || venueChoice > availableVenues.size()) {
-        cout << "Invalid choice." << endl;
-        return;
-    }
-
-    Venue chosenVenue = availableVenues[venueChoice-1];
-    event.venue = new Venue(chosenVenue);
-    event.budget->venueCost -= chosenVenue.price;
-    
-    cout << "\nVenue selected: " << chosenVenue.name << endl;
-    cout << "Remaining venue budget: " << event.budget->venueCost << endl;
-
-    // Add remaining venue budget to services budget
-    event.budget->serviceCost += event.budget->venueCost;
-    event.budget->venueCost = 0;
-    cout << "Updated services budget: " << event.budget->serviceCost << endl;
-
-    // Now choose services
-    cout << "\n=== Choosing Services ===" << endl;
-    ifstream serviceFile("services.csv");
-    if (!serviceFile.is_open()) {
-        cerr << "Error: Could not open services.csv" << endl;
-        return;
-    }
-
-    vector<Services> availableServices;
-    headerSkipped = false;
-
-    while (getline(serviceFile, line)) {
-        if (!headerSkipped) {
-            headerSkipped = true;
-            continue; // Skip header line
-        }
-
-        stringstream ss(line);
-        string temp;
-        Services service;
-        
-        // Read service data from CSV
-        getline(ss, temp, ','); // Serial number
-        getline(ss, service.name, ',');
-        getline(ss, temp, ',');
-        service.contact = stoi(temp);
-        getline(ss, service.type, ',');
-        getline(ss, temp, ',');
-        service.price = stoi(temp);
-        getline(ss, temp, ',');
-        service.avaialability = (temp == "True" || temp == "1");
-        getline(ss, temp, ',');
-        service.rating = stoi(temp);
-
-        if (service.avaialability && service.price <= event.budget->serviceCost) {
-            availableServices.push_back(service);
-        }
-    }
-    serviceFile.close();
-
-    // Display available services
-    if (availableServices.empty()) {
-        cout << "No services available within budget." << endl;
-        return;
-    }
-
-    vector<Services> selectedServices;
-    int remainingBudget = event.budget->serviceCost;
-
-    cout << "\nAvailable Services (Budget: " << remainingBudget << "):" << endl;
-    for (size_t i = 0; i < availableServices.size(); i++) {
-        cout << i+1 << ". " << availableServices[i].name 
-             << " (Type: " << availableServices[i].type 
-             << ", Price: " << availableServices[i].price 
-             << ", Rating: " << availableServices[i].rating << ")" << endl;
-    }
-
-    // Let user choose services until budget runs out or they stop
-    cout << "\nSelect services (enter number or any character to stop):" << endl;
-    int serviceChoice;
-    while (cin >> serviceChoice) {
-        if (serviceChoice < 1 || serviceChoice > availableServices.size()) {
-            cout << "Invalid choice." << endl;
-            continue;
-        }
-
-        Services chosenService = availableServices[serviceChoice-1];
-        if (chosenService.price > remainingBudget) {
-            cout << "Not enough budget for this service." << endl;
-            continue;
-        }
-
-        // Add service to selected services
-        selectedServices.push_back(chosenService);
-        remainingBudget -= chosenService.price;
-        
-        cout << "Service selected: " << chosenService.name << endl;
-        cout << "Remaining services budget: " << remainingBudget << endl;
-
-        if (remainingBudget <= 0) {
-            cout << "Budget exhausted." << endl;
-            break;
-        }
-
-        // Show remaining services that can be afforded
-        cout << "\nRemaining Services within Budget:" << endl;
-        bool affordableServicesExist = false;
-        for (size_t i = 0; i < availableServices.size(); i++) {
-            if (availableServices[i].price <= remainingBudget) {
-                cout << i+1 << ". " << availableServices[i].name 
-                     << " (Price: " << availableServices[i].price << ")" << endl;
-                affordableServicesExist = true;
-            }
-        }
-        
-        if (!affordableServicesExist) {
-            cout << "No more services can be afforded with remaining budget." << endl;
-            break;
-        }
-    }
-
-    // Clear any error state from non-numeric input
-    cin.clear();
-    
-
-    // Update the event's services
-    for (size_t i = 0; i < selectedServices.size(); i++) {
-        event.budget->services[i] = selectedServices[i];
-    }
-    event.budget->serviceCost = remainingBudget;
-
-    // Update total cost
-    event.budget->totalCost = event.budget->venueCost + event.budget->serviceCost;
-    if (event.budget->totalCost > 1000000) {
-        event.budget->totalCost *= 0.95; // Apply 5% discount
-    }
-
-    // Create filename for venue and services details
-    string v_s_filename = "v_and_s_" + string(1, event.hostname[0]) + "_" + event.date + ".csv";
-    ofstream v_s_file(v_s_filename);
-    if (v_s_file.is_open()) {
-        // Write venue details
-        v_s_file << "Venue Details\n";
-        v_s_file << "Name,Location,Price,Rating\n";
-        v_s_file << event.venue->name << "," 
-                 << event.venue->location << "," 
-                 << event.venue->price << "," 
-                 << event.venue->rating << "\n\n";
-        
-        // Write services details
-        v_s_file << "Services Details\n";
-        v_s_file << "Name,Type,Price,Rating\n";
-        for (size_t i = 0; i < selectedServices.size(); i++) {
-            v_s_file << selectedServices[i].name << "," 
-                     << selectedServices[i].type << "," 
-                     << selectedServices[i].price << "," 
-                     << selectedServices[i].rating << "\n";
-        }
-        v_s_file.close();
-        cout << "\nVenue and services details saved to: " << v_s_filename << endl;
-    } else {
-        cout << "Error: Could not create venue and services file." << endl;
-    }
-
-    cout << "\nVenue and services selection complete." << endl;
-    cout << "Final total cost: " << event.budget->totalCost << endl;
-
-    //press ENTER key to continue
-    cout << "Press ENTER key to continue...\n";
-    cin.ignore();
-    cin.get();
-    main_menu();
-
 }
