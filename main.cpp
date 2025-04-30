@@ -1,9 +1,9 @@
-#include <iostream>
-#include <vector>
+#include <iostream>     
+#include <vector>   
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
+#include <fstream>   // file handling write and read
+#include <sstream>  // string
+#include <iomanip>  // set width
 #include <cctype>  // for isdigit
 
 using namespace std;
@@ -1032,6 +1032,8 @@ void displayEventDetails() {
                 cout << "=========================================================================================================\n";
                 
 
+
+
                 // Extract the first two characters after the first comma and the second comma
                 size_t firstComma = line.find(','); // Find the position of the first comma
                 size_t secondComma = line.find(',', firstComma + 1); // Find the position of the second comma
@@ -1107,8 +1109,6 @@ void displayEventDetails() {
 }
 
 
-
-
 void updateEventDetails() {
     cout << "\n\n";
     cout << "=========================================================================================================\n";
@@ -1118,10 +1118,6 @@ void updateEventDetails() {
     cout << "=========================================================================================================\n";
 
     // Display current events
-    cout << "=========================================================================================================\n";
-    cout << "| Event Bookings:                                                                                      |\n";
-    cout << "=========================================================================================================\n";
-
     ifstream file("event.csv");
     if (!file.is_open()) {
         cout << "=========================================================================================================\n";
@@ -1133,127 +1129,88 @@ void updateEventDetails() {
     vector<string> lines;
     string line;
     while (getline(file, line)) {
-        cout << line << endl;
         lines.push_back(line);
     }
     file.close();
 
+    // Display events
     cout << "=========================================================================================================\n";
-    cout << "| Enter Event Serial No to update:                                                                    |\n";
+    cout << "| Serial No | Event Name       | Host Name       | Host Contact | Location       | Date       | Time   |\n";
+    cout << "---------------------------------------------------------------------------------------------------------\n";
+    for (size_t i = 1; i < lines.size(); ++i) { // Skip header
+        stringstream ss(lines[i]);
+        string serialNo, eventName, hostName, hostContact, location, date, time, type;
+        getline(ss, serialNo, ',');
+        getline(ss, eventName, ',');
+        getline(ss, hostName, ',');
+        getline(ss, hostContact, ',');
+        getline(ss, location, ',');
+        getline(ss, date, ',');
+        getline(ss, time, ',');
+        getline(ss, type, ',');
+        cout << "| " << setw(9) << left << serialNo
+             << "| " << setw(16) << left << eventName
+             << "| " << setw(15) << left << hostName
+             << "| " << setw(12) << left << hostContact
+             << "| " << setw(14) << left << location
+             << "| " << setw(10) << left << date
+             << "| " << setw(7) << left << time << "|\n";
+    }
     cout << "=========================================================================================================\n";
-    cout << "| ";
+
+    // Get the serial number of the event to update
+    cout << "| Enter Event Serial No to update: ";
     int serialNo;
     cin >> serialNo;
 
-    string updatedName = "", updatedHostName = "", updatedHostContact = "";
-    string updatedLocation = "", updatedDate = "", updatedTime = "", updatedType = "";
-    int choice;
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the event name? (1 for Yes, 0 for No):                                         |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated event name: ";
-        cin.ignore();
-        getline(cin, updatedName);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the host name? (1 for Yes, 0 for No):                                          |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated host name: ";
-        cin.ignore();
-        getline(cin, updatedHostName);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the host contact? (1 for Yes, 0 for No):                                       |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated host contact: ";
-        cin.ignore();
-        getline(cin, updatedHostContact);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the location? (1 for Yes, 0 for No):                                           |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated location: ";
-        cin.ignore();
-        getline(cin, updatedLocation);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the date? (1 for Yes, 0 for No):                                               |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated date (YYYY-MM-DD): ";
-        cin.ignore();
-        getline(cin, updatedDate);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the time? (1 for Yes, 0 for No):                                               |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated time (HH:MM): ";
-        cin.ignore();
-        getline(cin, updatedTime);
-    }
-
-    cout << "=========================================================================================================\n";
-    cout << "| Do you want to update the type? (1 for Yes, 0 for No):                                               |\n";
-    cout << "=========================================================================================================\n";
-    cout << "| ";
-    cin >> choice;
-    if (choice == 1) {
-        cout << "Enter updated type: ";
-        cin.ignore();
-        getline(cin, updatedType);
-    }
-
-    // Update the event in the vector
+    // Find the event in the file
     bool found = false;
-    for (size_t i = 0; i < lines.size(); ++i) {
+    for (size_t i = 1; i < lines.size(); ++i) { // Skip header
         stringstream ss(lines[i]);
         string temp;
         getline(ss, temp, ',');
-        int currentSerialNo = stoi(temp);
+        if (stoi(temp) == serialNo) {
+            found = true;
 
-        if (currentSerialNo == serialNo) {
+            // Update fields
+            string updatedName, updatedHostName, updatedHostContact, updatedLocation, updatedDate, updatedTime, updatedType;
+            cout << "Enter updated Event Name (leave blank to keep current): ";
+            cin.ignore();
+            getline(cin, updatedName);
+            cout << "Enter updated Host Name (leave blank to keep current): ";
+            getline(cin, updatedHostName);
+            cout << "Enter updated Host Contact (leave blank to keep current): ";
+            getline(cin, updatedHostContact);
+            cout << "Enter updated Location (leave blank to keep current): ";
+            getline(cin, updatedLocation);
+            cout << "Enter updated Date (YYYY-MM-DD, leave blank to keep current): ";
+            getline(cin, updatedDate);
+            cout << "Enter updated Time (HH:MM, leave blank to keep current): ";
+            getline(cin, updatedTime);
+            cout << "Enter updated Type (leave blank to keep current): ";
+            getline(cin, updatedType);
+
+            // Update the line
             vector<string> fields;
-            fields.push_back(to_string(serialNo)); // updated serial no
-
-            getline(ss, temp, ','); fields.push_back(updatedName.empty() ? temp : updatedName);
-            getline(ss, temp, ','); fields.push_back(updatedHostName.empty() ? temp : updatedHostName);
-            getline(ss, temp, ','); fields.push_back(updatedHostContact.empty() ? temp : updatedHostContact);
-            getline(ss, temp, ','); fields.push_back(updatedLocation.empty() ? temp : updatedLocation);
-            getline(ss, temp, ','); fields.push_back(updatedDate.empty() ? temp : updatedDate);
-            getline(ss, temp, ','); fields.push_back(updatedTime.empty() ? temp : updatedTime);
-            getline(ss, temp, ','); fields.push_back(updatedType.empty() ? temp : updatedType);
-
-            string updatedLine;
-            for (size_t j = 0; j < fields.size(); ++j) {
-                updatedLine += fields[j];
-                if (j < fields.size() - 1) updatedLine += ",";
+            string field;
+            while (getline(ss, field, ',')) {
+                fields.push_back(field);
             }
 
+            if (!updatedName.empty()) fields[1] = updatedName;
+            if (!updatedHostName.empty()) fields[2] = updatedHostName;
+            if (!updatedHostContact.empty()) fields[3] = updatedHostContact;
+            if (!updatedLocation.empty()) fields[4] = updatedLocation;
+            if (!updatedDate.empty()) fields[5] = updatedDate;
+            if (!updatedTime.empty()) fields[6] = updatedTime;
+            if (!updatedType.empty()) fields[7] = updatedType;
+
+            string updatedLine = fields[0];
+            for (size_t j = 1; j < fields.size(); ++j) {
+                updatedLine += "," + fields[j];
+            }
             lines[i] = updatedLine;
-            found = true;
+
             break;
         }
     }
@@ -1265,9 +1222,9 @@ void updateEventDetails() {
         return;
     }
 
-    // Write updated lines to file
+    // Write updated lines back to the file
     ofstream outFile("event.csv");
-    for (const string& l : lines) {
+    for (const string &l : lines) {
         outFile << l << endl;
     }
     outFile.close();
@@ -1276,14 +1233,13 @@ void updateEventDetails() {
     cout << "| Event details updated successfully!                                                                  |\n";
     cout << "=========================================================================================================\n";
 
-
     // Press ENTER key to continue
     cout << "=========================================================================================================\n";
     cout << "| Press ENTER key to continue...                                                                       |\n";
     cout << "=========================================================================================================\n";
     cin.ignore();
     cin.get();
-    existingEvent();
+    main_menu();
 }
 
 
