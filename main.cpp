@@ -995,12 +995,13 @@ void displayEventDetails() {
                  << "| " << setw(7) << left << time << "|\n";
         }
         file.close();
-    } else {
-        cout << RED << "=========================================================================================================\n";
-        cout << "| Error: Could not open event.csv                                                                      |\n";
-        cout << "=========================================================================================================\n" << RESET;
-        return;
     }
+    // } else {
+    //     cout << RED << "=========================================================================================================\n";
+    //     cout << "| Error: Could not open event.csv                                                                      |\n";
+    //     cout << "=========================================================================================================\n" << RESET;
+    //     return;
+    // }
 
     cout << CYAN << "=========================================================================================================\n";
     cout << "| Enter Event Serial No to view details:                                                              |\n";
@@ -1202,6 +1203,7 @@ void updateEventDetails() {
 
             // Update the line
             vector<string> fields;
+            fields.push_back(temp); // Preserve the serial number
             string field;
             while (getline(ss, field, ',')) {
                 fields.push_back(field);
