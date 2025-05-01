@@ -1,0 +1,6 @@
+serialNo,name,hostname,hostcontact,location,date,time,type
+1,TechTalk 2025,Dr. A. Sharma,9876543210,Auditorium A,2025-05-12,10:00 AM,Seminar
+2,Art & Design Fest,Mrs. K. Verma,9123456780,Main Hall,2025-05-18,2:00 PM,Exhibition
+3,Coding Hackathon 2.0,Mr. R. Mehta,9988776655,Lab 304,2025-05-25,9:00 AM,Competition
+4,Startup Pitch Night,Ms. T. D'Souza,9090909090,Conference Room B,2025-05-30,6:30 PM,Presentation
+5,Annual Science Fair,Dr. M. Khan,8866442200,Gymnasium,2025-06-05,11:00 AM,Expo
