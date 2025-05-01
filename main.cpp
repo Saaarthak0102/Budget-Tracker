@@ -492,11 +492,12 @@ void welcome() {
     cout << CYAN << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
     cout << "|\t\t\t\t==========================================================\t\t|\n";
     cout << "|\t\t\t\t|\t   PROJECT BY:\t\t\t\t\t |\t\t|\n";
-    cout << "|\t\t\t\t|\t  Batch: A-8         Semester - IInd\t\t |\t\t|\n";
-    cout << "|\t\t\t\t|\t  Maulshree Sharma        2401020218\t\t |\t\t|\n";
-    cout << "|\t\t\t\t|\t  Pratyaksh Tyagi         2401020232\t\t |\t\t|\n";
-    cout << "|\t\t\t\t|\t  Keshav Maini            2401020233\t\t |\t\t|\n";
-    cout << "|\t\t\t\t|\t  Sarthak Sabharwal       2401020234\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Batch: G-2         Semester - IInd\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Paridhi Jain             2401200035\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Navya Sachdeva           2401200037\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Leepakshi                2401200046\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Pranjal Srivastava       2401200054\t\t |\t\t|\n";
+    cout << "|\t\t\t\t|\t  Gourav Mittal            2401200059\t\t |\t\t|\n";
     cout << "|\t\t\t\t==========================================================\t\t|\n";
     cout << "|\t\t\t\t\t\t\t\t\t\t\t\t\t|\n";
     cout << "=========================================================================================================\n" << RESET;
